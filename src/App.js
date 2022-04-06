@@ -1,23 +1,36 @@
-import logo from './logo.svg';
 import './App.css';
+import foodsList from './foods.json';
+import { useState } from 'react';
+import FoodElement from './components/foodElement';
+import FormAddFood from './components/FormAddFood';
+import Search from './components/search';
 
 function App() {
+  const [ foods, setFoods ] = useState(foodsList);
+  const [ searchValue, setSearchValue ] = useState('');
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+     <Search searchValue={searchValue} setSearchValue={setSearchValue} />
+      <FormAddFood foods={foods} setFoods={setFoods} />
+      <div className="food-list">
+        {foods.length > 0 ? (
+          foods
+            .filter((el) =>
+              el.name.toUpperCase().includes(searchValue.toUpperCase())
+            )
+            .map((food) => (
+              <FoodElement
+                food={food}
+                key={food.name}
+                foods={foods}
+                setFoods={setFoods}
+              />
+            ))
+        ) : (
+          <p>No more Food</p>
+        )}
+      </div>
     </div>
   );
 }
